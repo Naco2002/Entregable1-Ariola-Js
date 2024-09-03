@@ -1,44 +1,46 @@
 
-let userNombre = "";
-let userEdad = 0;
+document.addEventListener('DOMContentLoaded', (event) => {
+    
+    const form = document.getElementById('userForm');
+    const mensaje = document.getElementById('mensaje');
+    const continuarBtn = document.getElementById('continuar');
 
-const min_edad = 18;
-const max_edad = 100; 
+    const minEdad = 18;
+    const maxEdad = 100;
 
-let userEdades = []; 
+    
+    let userEdades = JSON.parse(localStorage.getItem('userEdades')) || [];
 
-function getUserNombre() {
-    userNombre = prompt("¿Cuál es tu nombre?"); 
-    console.log("Nombre del usuario: " + userNombre); 
-}
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); 
 
-function getUserEdad() {
-    userEdad = parseInt(prompt("¿Cuántos años tienes?"), 10); 
-    if (isNaN(userEdad) || userEdad < min_edad || userEdad > max_edad) {
-        alert("Por favor, ingresa una edad válida entre 18 y 100.");
-        return; 
-    }
-    console.log("Edad del usuario: " + userEdad); 
-    userEdades.push(userEdad); 
-}
+        const userNombre = form.nombre.value;
+        const userEdad = parseInt(form.edad.value, 10);
 
-function bienvenida() {
-    alert("Bienvenido, " + userNombre); 
-}
+        if (isNaN(userEdad) || userEdad < minEdad || userEdad > maxEdad) {
+            alert('Por favor, ingresa una edad válida entre 18 y 100.');
+            return;
+        }
 
-function continuar() {
-    let continuarResponder = confirm("¿Deseas continuar?");
-    if (continuarResponder) {
-        console.log("El usuario ha decidido continuar");
-    } else {
-        console.log("El usuario ha decidido salir");
-    }
-}
+        
+        mensaje.textContent = `Bienvenido, ${userNombre}`;
 
+        
+        userEdades.push(userEdad);
+        localStorage.setItem('userEdades', JSON.stringify(userEdades));
 
-getUserNombre();
-getUserEdad();
-bienvenida();
-continuar();
+        
+        console.log('Nombre del usuario:', userNombre);
+        console.log('Edad del usuario:', userEdad);
+        console.log('Edades Ingresadas:', userEdades);
+    });
 
-console.log("Edades Ingresadas: ", userEdades); 
+    continuarBtn.addEventListener('click', function() {
+        const continuarResponder = confirm('¿Deseas continuar?');
+        if (continuarResponder) {
+            console.log('El usuario ha decidido continuar');
+        } else {
+            console.log('El usuario ha decidido salir');
+        }
+    });
+});
